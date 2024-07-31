@@ -1,5 +1,5 @@
 import { Controller, Post, Body } from '@nestjs/common';
-import { ApiOperation } from '@nestjs/swagger';
+import { ApiBody, ApiOperation } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 
 import { Public } from './publicRoutes/public';
@@ -11,7 +11,17 @@ export class AuthController {
   @Public()
   @Post('/signup')
   @ApiOperation({
-    summary: 'Sign Up as a user',
+    summary: 'Signup as a user',
+  })
+  @ApiBody({
+    description: 'SignUp creation payload',
+    schema: {
+      example: {
+        name: 'Jhon Doe',
+        email: 'email@email.com',
+        password: 'password',
+      },
+    },
   })
   create(@Body() createUserDto: Prisma.UserCreateInput) {
     return this.authService.signup(createUserDto);
@@ -19,6 +29,15 @@ export class AuthController {
 
   @ApiOperation({
     summary: 'Login as a user',
+  })
+  @ApiBody({
+    description: 'SignUp creation payload',
+    schema: {
+      example: {
+        email: 'email@email.com',
+        password: 'password',
+      },
+    },
   })
   @Public()
   @Post('/signin')
