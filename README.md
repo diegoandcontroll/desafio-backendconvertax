@@ -1,73 +1,70 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# API de Gerenciamento de Investimentos
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Este projeto é uma API robusta para gerenciar investimentos, implementada com NestJS e Docker. A API lida com uma grande quantidade de dados e é projetada para garantir escalabilidade e desempenho.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Requisitos Funcionais
 
-## Description
+1. **Criação de Investimento**:
+   - Endpoint para criar um investimento, incluindo proprietário, data de criação e valor inicial.
+   - Garantia de que nenhum investimento seja negativo.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+2. **Visualização de Investimento**:
+   - Endpoints para visualizar detalhes de um investimento, incluindo valor inicial, saldo esperado (considerando ganhos compostos) e histórico de retiradas.
 
-## Installation
+3. **Retirada de Investimento**:
+   - Endpoint para realizar retiradas de um investimento, calculando ganhos acumulados e aplicando impostos conforme a idade do investimento.
 
-```bash
-$ npm install
-```
+4. **Lista de Investimentos**:
+   - Endpoints para listar investimentos de um usuário com suporte a paginação e filtragem por status.
 
-## Running the app
+## Detalhes Técnicos
 
-```bash
-# development
-$ npm run start
+- **Ganhos de Investimento**:
+  - Rendimentos de 0,52% ao mês com cálculos precisos para ganhos compostos.
 
-# watch mode
-$ npm run start:dev
+- **Tributação**:
+  - Impostos sobre retiradas com base na idade do investimento:
+    - Menos de um ano: 22,5%.
+    - Entre um e dois anos: 18,5%.
+    - Mais de dois anos: 15%.
 
-# production mode
-$ npm run start:prod
-```
+- **Arquitetura e Padrões**:
+  - Implementação seguindo o padrão MVC (Model-View-Controller) com princípios SOLID e boas práticas de design de software.
 
-## Test
+- **Cache e Performance**:
+  - Estratégias de cache integradas para otimizar consultas frequentes e melhorar a performance da API.
 
-```bash
-# unit tests
-$ npm run test
+- **Segurança e Autenticação**:
+  - Autenticação baseada em JWT (JSON Web Tokens) com middleware para verificar a validade dos tokens.
+  - Comunicação via HTTPS.
+  - Proteção contra SQL Injection e XSS (Cross-Site Scripting).
+  - Rate limiting para prevenção de ataques de força bruta.
 
-# e2e tests
-$ npm run test:e2e
+- **Documentação e Testes**:
+  - Documentação da API disponível em [Swagger/OpenAPI](https://localhost:3000/convertax/api/v1/docs).
+  - Testes unitários abrangentes para validação da funcionalidade da API.
 
-# test coverage
-$ npm run test:cov
-```
 
-## Support
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### Configuração do Ambiente
+1. **Clone o repositório**:
+   ```bash
+  git clone <URL_DO_REPOSITORIO>
+  cd <DIRETORIO_DO_REPOSITORIO>
+  create .env copy .env.example
+  mkdir secrets
+  cd secrets
+  mkcert create-cert
+  mkcert create-ca
 
-## Stay in touch
+## Configuração e Execução com Docker
+  docker compose up -d
+### Instalando Dependências
+  npm i 
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### Configuração do prisma 
+  npx prisma migrate dev --name init
+  npx prisma generate
 
-## License
-
-Nest is [MIT licensed](LICENSE).
+### Executando Projeto
+  npm run start:dev

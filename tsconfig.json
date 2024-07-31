@@ -16,6 +16,14 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "@app/rabbitmq": [
+        "src/libs/rabbitmq/src"
+      ],
+      "@app/rabbitmq/*": [
+        "src/libs/rabbitmq/src/*"
+      ]
+    }
   }
 }
