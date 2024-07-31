@@ -49,10 +49,6 @@ Este projeto é uma API robusta para gerenciar investimentos, implementada com N
 ### Configuração do Ambiente
 1. **Clone o repositório**:
 2. **create file .env copy .env.example**:
-3. **mkdir secrets**:
-4. **cd secrets**:
-5. **mkcert create-cert**:
-6. **mkcert create-ca**:
 
 ## Configuração e Execução com Docker
   docker compose up -d
