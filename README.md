@@ -49,8 +49,7 @@ Este projeto é uma API robusta para gerenciar investimentos, implementada com N
 ### Configuração do Ambiente
 1. **Clone o repositório**:
    ```bash
-  git clone <URL_DO_REPOSITORIO>
-  cd <DIRETORIO_DO_REPOSITORIO>
+  git clone <[URL_DO_REPOSITORIO](https://github.com/diegoandcontroll/desafio-backendconvertax.git)>
   create .env copy .env.example
   mkdir secrets
   cd secrets
