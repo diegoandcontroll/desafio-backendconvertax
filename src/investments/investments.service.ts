@@ -1,3 +1,5 @@
+// src/investments/investments.service.ts
+
 import { Injectable, BadRequestException, Inject } from '@nestjs/common';
 import { Cache } from 'cache-manager';
 import { ClientProxy } from '@nestjs/microservices';
@@ -24,7 +26,7 @@ export class InvestmentsService {
       data: {
         ownerId: userId,
         initialAmount,
-        currentAmount: initialAmount,
+        currentAmount: initialAmount, // Atualizar para o valor inicial
         createdAt: createdAt || new Date(),
       },
     });
@@ -34,7 +36,7 @@ export class InvestmentsService {
     return investment;
   }
 
-  async getInvestment(id: string) {
+  async getInvestment(id: string, userId: string) {
     const cacheKey = `investment_${id}`;
     const cachedInvestment = await this.cacheManager.get(cacheKey);
 
@@ -43,7 +45,7 @@ export class InvestmentsService {
     }
 
     const investment = await this.prisma.investment.findUnique({
-      where: { id },
+      where: { id, ownerId: userId },
       include: { withdrawals: true },
     });
 
@@ -54,13 +56,14 @@ export class InvestmentsService {
     const monthsElapsed = this.getMonthsElapsed(new Date(investment.createdAt));
     const compoundInterest =
       investment.initialAmount * Math.pow(1 + 0.0052, monthsElapsed);
-    const totalAmount = investment.currentAmount + compoundInterest;
+    const totalAmount = compoundInterest; // Valor acumulado com ganhos compostos
 
     const result = {
       ...investment,
-      totalAmount,
+      currentAmount: totalAmount, // Atualizar o valor atual com ganhos compostos
+      totalAmount, // Valor total acumulado
     };
-    await this.cacheManager.set(cacheKey, result, 3600); // Corrigido
+    await this.cacheManager.set(cacheKey, result, 3600);
     return result;
   }
 
@@ -85,11 +88,11 @@ export class InvestmentsService {
 
     const investments = await this.prisma.investment.findMany({
       where: whereClause,
-      skip: (page - 1) * pageSize,
+      skip: (Number(page) - 1) * Number(pageSize),
       take: pageSize,
     });
 
-    await this.cacheManager.set(cacheKey, investments, 3600); // Corrigido
+    await this.cacheManager.set(cacheKey, investments, 3600);
     return investments;
   }
 

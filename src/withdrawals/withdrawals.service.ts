@@ -17,26 +17,31 @@ export class WithdrawalsService {
     amount: number,
   ) {
     const investment = await this.prisma.investment.findUnique({
-      where: { ownerId: userid, id: investmentId },
+      where: { id: investmentId },
     });
 
-    if (!investment) {
+    if (!investment || investment.ownerId !== userid) {
       throw new BadRequestException('Investment not found');
     }
 
-    if (amount <= 0 || amount > investment.currentAmount) {
+    // Considerar o valor atual acumulado com ganhos compostos
+    const monthsElapsed = this.getMonthsElapsed(new Date(investment.createdAt));
+    const compoundInterest =
+      investment.initialAmount * Math.pow(1 + 0.0052, monthsElapsed);
+    const currentAmount = compoundInterest; // Valor acumulado
+
+    if (amount <= 0 || amount > currentAmount) {
       throw new BadRequestException('Invalid withdrawal amount');
     }
 
-    const monthsElapsed = this.getMonthsElapsed(new Date(investment.createdAt));
     const taxRate = this.getTaxRate(monthsElapsed);
     const taxAmount = (amount * taxRate) / 100;
     const netAmount = amount - taxAmount;
 
-    const updatedInvestiment = await this.prisma.investment.update({
+    const updatedInvestment = await this.prisma.investment.update({
       where: { id: investmentId },
       data: {
-        currentAmount: investment.currentAmount - amount,
+        currentAmount: currentAmount - amount, // Atualizar valor com a retirada
         withdrawals: {
           create: {
             amount,
@@ -51,10 +56,10 @@ export class WithdrawalsService {
       amount,
       taxAmount,
       investment,
-      updatedInvestiment,
+      updatedInvestment,
     });
 
-    return { amount: netAmount, taxAmount, investment: updatedInvestiment };
+    return { amount: netAmount, taxAmount, investment: updatedInvestment };
   }
 
   private getMonthsElapsed(startDate: Date): number {

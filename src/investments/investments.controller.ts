@@ -14,6 +14,7 @@ import {
   ApiTags,
   ApiBody,
   ApiQuery,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import { InvestmentsService } from './investments.service';
 import { SkipThrottle, Throttle } from '@nestjs/throttler';
@@ -25,6 +26,7 @@ import type { ClientProxy } from '@nestjs/microservices';
 @Controller('investments')
 @UseGuards(JwtAuthGuard)
 @ApiTags('Investments')
+@ApiBearerAuth()
 export class InvestmentsController {
   constructor(
     private readonly investmentsService: InvestmentsService,
@@ -86,8 +88,8 @@ export class InvestmentsController {
     description: 'Investment details retrieved successfully.',
     schema: {
       example: {
-        id: 'investment123',
-        ownerId: 'user123',
+        id: 'uuid',
+        ownerId: 'uuid',
         initialAmount: 1000,
         currentAmount: 1000,
         createdAt: '2024-07-31T12:00:00Z',
@@ -100,8 +102,11 @@ export class InvestmentsController {
     description: 'Bad request, investment not found.',
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
-  async getInvestment(@Param('id') id: string) {
-    return this.investmentsService.getInvestment(id);
+  async getInvestment(
+    @Param('id') id: string,
+    @Param('userId') userId: string,
+  ) {
+    return this.investmentsService.getInvestment(id, userId);
   }
 
   @Get()
@@ -155,8 +160,8 @@ export class InvestmentsController {
     return this.investmentsService.listInvestments(
       userId,
       status,
-      page,
-      pageSize,
+      Number(page),
+      Number(pageSize),
     );
   }
 }
