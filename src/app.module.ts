@@ -19,7 +19,7 @@ import { CacheModule } from '@nestjs/cache-manager';
     ConfigModule.forRoot(),
     CacheModule.register({
       store: 'redis',
-      host: 'localhost', // Ajuste se necessário
+      host: process.env.REDIS_URL || 'localhost',
       port: 6379,
     }),
     UsersModule,

@@ -3,13 +3,15 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { RolesGuard } from './auth/guards/roles.guard';
-import * as fs from 'fs';
+//import * as fs from 'fs';
 
 async function bootstrap() {
+  /*
   const httpsOptions = {
     key: fs.readFileSync('./secrets/cert.key', 'utf8'),
     cert: fs.readFileSync('./secrets/cert.crt', 'utf8'),
   };
+  */
   const config = new DocumentBuilder()
     .addBearerAuth()
     .setTitle('ConvertaX API')
@@ -18,7 +20,7 @@ async function bootstrap() {
     .addTag('by DiegoLucas')
     .build();
 
-  const app = await NestFactory.create(AppModule, { httpsOptions });
+  const app = await NestFactory.create(AppModule /*{ httpsOptions }*/);
 
   app.enableCors();
   app.setGlobalPrefix('/convertax/api/v1');

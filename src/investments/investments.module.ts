@@ -11,7 +11,7 @@ import { CacheModule } from '@nestjs/cache-manager';
     PrismaModule,
     CacheModule.register({
       store: 'redis',
-      host: 'localhost',
+      host: process.env.REDIS_URL || 'localhost',
       port: 6379,
     }),
     ClientsModule.register([
